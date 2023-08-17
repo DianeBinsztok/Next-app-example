@@ -1,14 +1,12 @@
 const Home = () => {
   return (
     <section className="w-full flex-center flex-col">
-        Home
+        <h1 className="head_text text-center">My NextJS app</h1>
     </section>
   )
 }
 /*
-Les classes peuvent être des utilitaires Tailwind ou des classes personnalisées définies dans globals.css
-w-full => classe utilitaire de Tailwind => full-width
-flex-center => dans globals.css => @apply flex justify-center items-center;
-flex-col => classe utilitaire de Tailwind => display:flex; flex-direction:column
+text-center => classe utilitaire de Tailwind => text-align:center;
+head_text => dans globals.css => @apply mt-5 text-5xl font-extrabold leading-[1.15] text-black sm:text-6xl;
 */
 export default Home;
