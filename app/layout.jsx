@@ -3,7 +3,7 @@ import '@styles/globals.css';
 export const metadata = {
   title: 'NextJS example',
   description: 'A NextJS app example',
-}
+};
  
 export default function RootLayout({ children }) {
  return (
@@ -11,10 +11,10 @@ export default function RootLayout({ children }) {
       <body>
         <div className='main'>
           <div className='gradient'/>
-            <main className='app'>
-              { children }
-            </main>
         </div>
+        <main className='app'>
+              { children }
+        </main>
       </body>
     </html>
   )
