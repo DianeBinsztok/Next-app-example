@@ -1,4 +1,4 @@
-import '@/styles/globals.css'
+import '@styles/globals.css';
 
 export const metadata = {
   title: 'NextJS example',
@@ -8,7 +8,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
  return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div className='main'>
+          <div className='gradient'/>
+            <main className='app'>
+              { children }
+            </main>
+        </div>
+      </body>
     </html>
   )
 }
