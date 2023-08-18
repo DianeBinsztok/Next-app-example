@@ -17,8 +17,8 @@ const Nav = () => {
             <p className='logo_text'>Home</p>
         </Link>
 
-         {/* Pour créer un nouveau post */}
-         <div className='sm:flex hidden'>
+        {/* Navigation bureau */}
+        <div className='sm:flex hidden'>
 
           {/* Condition ternaire: 
           si userLoggedIn => afficher le lien 
@@ -41,8 +41,30 @@ const Nav = () => {
             className='rounded-full'/>
             </Link>
           </div>
-          ):(<></>)}
-         </div>
+          ):(<button type='button' className='outline_btn'>
+              Sign in
+            </button>)}
+        </div>
+
+        {/* Navigation mobile */}
+        <div className='sm:hidden flex relative' >
+          {userLoggedIn ? (
+            <div className='flex'>
+              <Image 
+              src="/assets/images/logo.svg"
+              alt="profile"
+              width={37}
+              height={37}
+              className='rounded-full'/>
+            </div>
+          ) : (
+            <button type='button' className='outline_btn'>
+              Sign in
+            </button>
+          )}
+        </div>
+
+
     </nav>
   )
 }
