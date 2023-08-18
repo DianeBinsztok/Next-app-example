@@ -1,3 +1,10 @@
+//Pour l'usage des hooks, le composant doit être rendu côté client
+"use client";
+
+//Les méthodes next-auth/react
+import {signIn, signOut} from 'next-auth/react';
+
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -28,7 +35,7 @@ const Nav = () => {
             <Link href="/create-post" className='black_btn'>
               Create post
             </Link>
-            <button type='button' className='outline_btn'>
+            <button type='button' className='outline_btn' onClick={signOut}>
               Sign out
             </button>
 
@@ -41,7 +48,7 @@ const Nav = () => {
             className='rounded-full'/>
             </Link>
           </div>
-          ):(<button type='button' className='outline_btn'>
+          ):(<button type='button' className='outline_btn' onClick={signIn}>
               Sign in
             </button>)}
         </div>
@@ -58,7 +65,7 @@ const Nav = () => {
               className='rounded-full'/>
             </div>
           ) : (
-            <button type='button' className='outline_btn'>
+            <button type='button' className='outline_btn' onClick={signIn}>
               Sign in
             </button>
           )}
