@@ -26,8 +26,11 @@ const Nav = () => {
           {userLoggedIn ? (
           <div className='flex gap-3 md:gap-5'>
             <Link href="/create-post" className='black_btn'>
-            Créer un post
+              Créer un post
             </Link>
+            <button type='button' className='outline_btn'>
+              Déconnexion
+            </button>
           </div>
           ):(<></>)}
          </div>
