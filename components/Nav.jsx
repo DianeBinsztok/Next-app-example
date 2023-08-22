@@ -1,6 +1,20 @@
 //Pour l'usage des hooks, le composant doit être rendu côté client
 "use client";
 
+//Les hooks React:
+import{useState} from 'react';
+/*
+Permet d'ajouter un état réactif à un composant fonctionnel.
+L'état permet au composant de garder en mémoire et modifier des données qui peuvent changer, déclenchant un nouveau rendu du composant
+
+ - Dans un composant classe, l'état est une propriété this.state de la classe
+ Il est modifié avec la méthode this.setState()
+
+ - Dans un composant fonctionnel, l'état est géré par des variables déclaratives gérées par React.
+ Alors qu'un composant classe n'a qu'une propriété de state, un composant fonctionnel peut avoir autant de variable d'état que nécessaire, avec leur setters
+*/
+
+
 //Les méthodes next-auth/react
 import {signIn, signOut} from 'next-auth/react';
 
@@ -12,6 +26,15 @@ import Image from 'next/image';
 const Nav = () => {
 
   const userLoggedIn = true;
+
+  /*
+  useState prend pour argument l'état initial du composant (ici à null)
+  useState() renvoie un tableau de deux éléments:
+  - l'état actuel
+  - la fonction pour mettre cet état à jour
+  */
+  const [providers, setProviders] = useState(null);
+
   return (
     <nav className="flex-between w-full mb-16 pt-3">
         <Link href='/' className='flex gap-2 flex-center'>
