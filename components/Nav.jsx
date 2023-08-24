@@ -2,21 +2,20 @@
 "use client";
 
 //Les hooks React:
-import{useState} from 'react';
+import{useEffect, useState} from 'react';
 /*
 Permet d'ajouter un état réactif à un composant fonctionnel.
 L'état permet au composant de garder en mémoire et modifier des données qui peuvent changer, déclenchant un nouveau rendu du composant
 
- - Dans un composant classe, l'état est une propriété this.state de la classe
- Il est modifié avec la méthode this.setState()
+ - Dans un composant classe, l'état est une propriété this.state de la classe. C'est un objet unique mais qui peut stocker plusieurs variables. Il est modifié avec la méthode this.setState()
 
  - Dans un composant fonctionnel, l'état est géré par des variables déclaratives gérées par React.
- Alors qu'un composant classe n'a qu'une propriété de state, un composant fonctionnel peut avoir autant de variable d'état que nécessaire, avec leur setters
+ Alors qu'un composant classe n'a qu'une propriété de state, un composant fonctionnel peut avoir autant de variables d'état que nécessaire, avec leur setters. ex: const [count, setCount] = useState(0)
 */
 
 
 //Les méthodes next-auth/react
-import {signIn, signOut} from 'next-auth/react';
+import {signIn, signOut, getProviders} from 'next-auth/react';
 
 
 import React from 'react';
@@ -28,12 +27,50 @@ const Nav = () => {
   const userLoggedIn = true;
 
   /*
-  useState prend pour argument l'état initial du composant (ici à null)
+  useState() prend pour argument l'état initial du composant (ici à null)
   useState() renvoie un tableau de deux éléments:
-  - l'état actuel
-  - la fonction pour mettre cet état à jour
+  - l'état actuel: providers
+  - la fonction pour mettre cet état à jour: setProviders()
   */
   const [providers, setProviders] = useState(null);
+
+/*
+  Initialisation des providers.
+  
+  useEffect est un hook React qui permet d'effectuer des "effets secondaires" dans des composants
+  (modification du DOM, écoute d'événements, récupération de données, etc.).
+  
+  useEffect prend deux arguments:
+  - Une fonction callback qui définit l'effet à réaliser.
+  - Un tableau de dépendances (optionnel) liste les conditions pour que l'effet s'applique. L'effet sera réexécuté chaque fois qu'une valeur dans ce tableau change.
+  ex:
+    * Pas de paramètre => l'effet se déclenche à chaque rendu du composant
+    * Un tableau vide (cas présent)=> l'effet se déclenche une seule fois, au montage du composant (équivalent à componentDidMount dans les composants de classe)
+
+
+    ex:
+    useEffect(()=>{
+        console.log("Effect!");
+      },[]
+    );
+
+  Ici:
+  1. Je définis la fonction asynchrone fetchProviders.
+  2. fetchProviders appelle getProviders() (importée depuis next-auth/react) et attend sa réponse.
+  3. Une fois cette réponse obtenue, elle est passée au setter d'état setProviders pour mettre à jour l'état des providers.
+  
+  Une fois définie, j'appelle fetchProviders immédiatement (useEffect ne gère pas les fonction asynchrone. Pour éviter que useEffect renvoie une Promesse, je définis d'abord la fonction avant de l'appeler (au lieu de l'appeler directement) */
+
+  useEffect(()=>{
+    const fetchProviders = async ()=>{
+      const response = await getProviders();
+      setProviders(response);
+    };
+
+    fetchProviders();
+    
+  }, []);
+
 
   return (
     <nav className="flex-between w-full mb-16 pt-3">
