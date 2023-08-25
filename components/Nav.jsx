@@ -24,7 +24,7 @@ import Image from 'next/image';
 
 const Nav = () => {
 
-  const userLoggedIn = false;
+  const userLoggedIn = true;
 
   /*
   useState() prend pour argument l'état initial du composant (ici à null)
@@ -120,17 +120,13 @@ const Nav = () => {
                   })
                 }
               </>
-          /*
-            <button type='button' className='outline_btn' onClick={signIn}>
-              Sign in
-            </button>
-            
-            */)}
+              )}
         </div>
 
         {/* Navigation mobile */}
         <div className='sm:hidden flex relative' >
           {userLoggedIn ? (
+            /*Si l'utilisateur est connecté, j'afficherai un dropdown menu avec un toggle*/
             <div className='flex'>
               <Image 
               src="/assets/images/logo.svg"
@@ -140,10 +136,30 @@ const Nav = () => {
               className='rounded-full'/>
             </div>
           ) : (
+
+            /*Sinon, le bouton de connection: */
             
-            <button type='button' className='outline_btn' onClick={signIn}>
-              Sign in
-            </button>
+            <>
+              {/* Je vérifie que j'ai accès aux providers*/}
+                {providers && 
+                  /* Si j'ai accès aux providers: 
+                  - la méthode Object.values() renvoie un tableau des valeurs contenues dans l'objet providers
+                  - map(): pour chaque provider du tableau, je retourne un bouton
+                  Chaque provider étant lui-même un objet, j'aurai accès à ses propriétés 'id' et'name'
+
+                  Le bouton n'apparaîtra pas tant que je n'aurai pas configuré les providers avec la fonction utilitaire NextAuth
+                  */
+                  Object.values(providers).map((provider)=>{
+                    <button 
+                      type='button' 
+                      className='black_btn'
+                      key={provider.name}
+                      onClick={()=>{signIn(provider.id)}}>
+                        Sign In
+                    </button>
+                  })
+                }
+              </>
             
           )}
         </div>
