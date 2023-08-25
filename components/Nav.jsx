@@ -114,34 +114,49 @@ const Nav = () => {
                 n'est pas recommandé et peut créer des effets inattendus.
                 Il est préférable d'utiliser un paramètre (prev) pour s'assurer d'avoir la valeur la plus récente de toggleDropdown*/
               />
+
               {/*Si toggleDropdown est à 'true': afficher le(s) lien(s)*/}
               {toggleDropdown && (
-                <div classname="dropdown">
+                <div className="dropdown">
                   <Link
                     href="/profile"
                     className="dropdown_link"
                     onClick={()=> setToggleDropdown(false)}>
                       My profile
                   </Link>
+                  <Link
+                    href="/create-post"
+                    className="dropdown_link"
+                    onClick={()=> setToggleDropdown(false)}>
+                      Create a new post
+                  </Link>
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setToggleDropdown(false);
+                      signOut();
+                    }}
+                    className='mt-5 w-full black_btn'>
+                    Sign Out
+                  </button>
                 </div>
               )}
             </div>
           ) : (
-
             /* Sinon, afficher un bouton par fournisseur d'authentification*/
             <>
-                {providers && 
-                  Object.values(providers).map((provider)=>{
-                    <button 
-                      type='button' 
-                      className='black_btn'
-                      key={provider.name}
-                      onClick={()=>{signIn(provider.id)}}>
-                        Sign In
-                    </button>
-                  })
-                }
-              </>
+              {providers && 
+                Object.values(providers).map((provider)=>{
+                  <button 
+                    type='button' 
+                    className='black_btn'
+                    key={provider.name}
+                    onClick={()=>{signIn(provider.id)}}>
+                      Sign In
+                  </button>
+                })
+              }
+            </>
             
           )}
         </div>
