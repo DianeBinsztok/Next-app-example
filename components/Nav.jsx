@@ -3,16 +3,6 @@
 
 //Les hooks React:
 import{useEffect, useState} from 'react';
-/*
-Permet d'ajouter un état réactif à un composant fonctionnel.
-L'état permet au composant de garder en mémoire et modifier des données qui peuvent changer, déclenchant un nouveau rendu du composant
-
- - Dans un composant classe, l'état est une propriété this.state de la classe. C'est un objet unique mais qui peut stocker plusieurs variables. Il est modifié avec la méthode this.setState()
-
- - Dans un composant fonctionnel, l'état est géré par des variables déclaratives gérées par React.
- Alors qu'un composant classe n'a qu'une propriété de state, un composant fonctionnel peut avoir autant de variables d'état que nécessaire, avec leur setters. ex: const [count, setCount] = useState(0)
-*/
-
 
 //Les méthodes next-auth/react
 import {signIn, signOut, getProviders} from 'next-auth/react';
@@ -26,31 +16,16 @@ const Nav = () => {
 
   const userLoggedIn = true;
 
-  /*
-  useState() prend pour argument l'état initial du composant (ici à null)
-  useState() renvoie un tableau de deux éléments:
-  - l'état actuel: l'objet providers, qui peut contenir plusiquers valeurs
-  - la fonction pour mettre cet état à jour: setProviders()
-  */
+  /*LES VARIABLES D'ÉTAT*/
+
+  // - Les fournisseur d'authentification
   const [providers, setProviders] = useState(null);
 
-/*
-  Initialisation des providers.
-  
-  useEffect est un hook React qui permet d'effectuer des "effets secondaires" dans des composants
-  (modification du DOM, écoute d'événements, récupération de données, etc.).
-  
-  useEffect prend deux arguments:
-  - Une fonction callback qui définit l'effet à réaliser.
-  - Un tableau de dépendances (optionnel) liste les conditions pour que l'effet s'applique. L'effet sera réexécuté chaque fois qu'une valeur dans ce tableau change.
+  // - l'état du dropdown menu sur mobile: fermé par défaut
+  const [toggleDropdown, setToggleDropdown] = useState(false);
 
-  Ici:
-  1. Je définis la fonction asynchrone fetchProviders.
-  2. fetchProviders appelle getProviders() (importée depuis next-auth/react) et attend sa réponse.
-  3. Une fois cette réponse obtenue, elle est passée au setter d'état setProviders pour mettre à jour l'état des providers.
-  
-  Une fois définie, j'appelle fetchProviders immédiatement (useEffect ne gère pas les fonctions asynchrones. Pour éviter que useEffect renvoie une Promesse, je définis d'abord la fonction avant de l'appeler (au lieu de l'appeler directement) */
 
+  /*LES EFFETS qui modifieront les variables d'état*/
   useEffect(()=>{
     const fetchProviders = async ()=>{
       const response = await getProviders();
@@ -77,10 +52,9 @@ const Nav = () => {
         {/* Navigation bureau */}
         <div className='sm:flex hidden'>
 
-          {/* Condition ternaire: 
-          si userLoggedIn => afficher le lien 
-          sinon => afficher les balises vides<></>*/}
           {userLoggedIn ? (
+          
+          /* Si l'utilisateur est connecté, afficher les boutons 'Create post' et 'Sign out'*/
           <div className='flex gap-3 md:gap-5'>
             <Link href="/create-post" className='black_btn'>
               Create post
@@ -99,16 +73,10 @@ const Nav = () => {
             </Link>
           </div>
           ):(
+                      
+            /* Sinon, afficher un bouton par fournisseur d'authentification*/
               <>
-              {/* Je vérifie que j'ai accès aux providers*/}
                 {providers && 
-                  /* Si j'ai accès aux providers: 
-                  - la méthode Object.values() renvoie un tableau des valeurs contenues dans l'objet providers
-                  - map(): pour chaque provider du tableau, je retourne un bouton
-                  Chaque provider étant lui-même un objet, j'aurai accès à ses propriétés 'id' et'name'
-
-                  Le bouton n'apparaîtra pas tant que je n'aurai pas configuré les providers avec la fonction utilitaire NextAuth
-                  */
                   Object.values(providers).map((provider)=>{
                     <button 
                       type='button' 
@@ -129,26 +97,40 @@ const Nav = () => {
             /*Si l'utilisateur est connecté, j'afficherai un dropdown menu avec un toggle*/
             <div className='flex'>
               <Image 
-              src="/assets/images/logo.svg"
-              alt="profile"
-              width={37}
-              height={37}
-              className='rounded-full'/>
+                src="/assets/images/logo.svg"
+                alt="profile"
+                width={37}
+                height={37}
+                className='rounded-full'
+
+                /*le setter du state accepte 2 types de paramètre:
+                - la valeur à affecter à la variable d'état (ici, toggleDropdown), ou
+                - ici: une fonction callback qui renvoie l'inverse de la valeur d'état*/
+
+                onClick={()=>{setToggleDropdown((prev)=>{return !prev;})}}
+
+                /*En React, changer la valeur du state en utilisant la valeur du state précédent:
+                setToggleDropdown(!toggleDropdown)}
+                n'est pas recommandé et peut créer des effets inattendus.
+                Il est préférable d'utiliser un paramètre (prev) pour s'assurer d'avoir la valeur la plus récente de toggleDropdown*/
+              />
+              {/*Si toggleDropdown est à 'true': afficher le(s) lien(s)*/}
+              {toggleDropdown && (
+                <div classname="dropdown">
+                  <Link
+                    href="/profile"
+                    className="dropdown_link"
+                    onClick={()=> setToggleDropdown(false)}>
+                      My profile
+                  </Link>
+                </div>
+              )}
             </div>
           ) : (
 
-            /*Sinon, le bouton de connection: */
-            
+            /* Sinon, afficher un bouton par fournisseur d'authentification*/
             <>
-              {/* Je vérifie que j'ai accès aux providers*/}
                 {providers && 
-                  /* Si j'ai accès aux providers: 
-                  - la méthode Object.values() renvoie un tableau des valeurs contenues dans l'objet providers
-                  - map(): pour chaque provider du tableau, je retourne un bouton
-                  Chaque provider étant lui-même un objet, j'aurai accès à ses propriétés 'id' et'name'
-
-                  Le bouton n'apparaîtra pas tant que je n'aurai pas configuré les providers avec la fonction utilitaire NextAuth
-                  */
                   Object.values(providers).map((provider)=>{
                     <button 
                       type='button' 
