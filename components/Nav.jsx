@@ -65,7 +65,7 @@ const Nav = () => {
 
             <Link href="/profile">
             <Image 
-            src="/assets/images/logo.svg"
+            src="/assets/icons/profile.webp"
             alt="profile"
             width={37}
             height={37}
