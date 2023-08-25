@@ -97,7 +97,7 @@ const Nav = () => {
             /*Si l'utilisateur est connecté, j'afficherai un dropdown menu avec un toggle*/
             <div className='flex'>
               <Image 
-                src="/assets/images/logo.svg"
+                src="/assets/icons/menu.svg"
                 alt="profile"
                 width={37}
                 height={37}
