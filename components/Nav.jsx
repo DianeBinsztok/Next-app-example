@@ -24,12 +24,12 @@ import Image from 'next/image';
 
 const Nav = () => {
 
-  const userLoggedIn = true;
+  const userLoggedIn = false;
 
   /*
   useState() prend pour argument l'état initial du composant (ici à null)
   useState() renvoie un tableau de deux éléments:
-  - l'état actuel: providers
+  - l'état actuel: l'objet providers, qui peut contenir plusiquers valeurs
   - la fonction pour mettre cet état à jour: setProviders()
   */
   const [providers, setProviders] = useState(null);
@@ -43,23 +43,13 @@ const Nav = () => {
   useEffect prend deux arguments:
   - Une fonction callback qui définit l'effet à réaliser.
   - Un tableau de dépendances (optionnel) liste les conditions pour que l'effet s'applique. L'effet sera réexécuté chaque fois qu'une valeur dans ce tableau change.
-  ex:
-    * Pas de paramètre => l'effet se déclenche à chaque rendu du composant
-    * Un tableau vide (cas présent)=> l'effet se déclenche une seule fois, au montage du composant (équivalent à componentDidMount dans les composants de classe)
-
-
-    ex:
-    useEffect(()=>{
-        console.log("Effect!");
-      },[]
-    );
 
   Ici:
   1. Je définis la fonction asynchrone fetchProviders.
   2. fetchProviders appelle getProviders() (importée depuis next-auth/react) et attend sa réponse.
   3. Une fois cette réponse obtenue, elle est passée au setter d'état setProviders pour mettre à jour l'état des providers.
   
-  Une fois définie, j'appelle fetchProviders immédiatement (useEffect ne gère pas les fonction asynchrone. Pour éviter que useEffect renvoie une Promesse, je définis d'abord la fonction avant de l'appeler (au lieu de l'appeler directement) */
+  Une fois définie, j'appelle fetchProviders immédiatement (useEffect ne gère pas les fonctions asynchrones. Pour éviter que useEffect renvoie une Promesse, je définis d'abord la fonction avant de l'appeler (au lieu de l'appeler directement) */
 
   useEffect(()=>{
     const fetchProviders = async ()=>{
@@ -69,7 +59,7 @@ const Nav = () => {
 
     fetchProviders();
     
-  }, []);
+  }, []/*l'effet ne se lance qu'au premier rendu du composant */);
 
 
   return (
@@ -108,9 +98,34 @@ const Nav = () => {
             className='rounded-full'/>
             </Link>
           </div>
-          ):(<button type='button' className='outline_btn' onClick={signIn}>
+          ):(
+              <>
+              {/* Je vérifie que j'ai accès aux providers*/}
+                {providers && 
+                  /* Si j'ai accès aux providers: 
+                  - la méthode Object.values() renvoie un tableau des valeurs contenues dans l'objet providers
+                  - map(): pour chaque provider du tableau, je retourne un bouton
+                  Chaque provider étant lui-même un objet, j'aurai accès à ses propriétés 'id' et'name'
+
+                  Le bouton n'apparaîtra pas tant que je n'aurai pas configuré les providers avec la fonction utilitaire NextAuth
+                  */
+                  Object.values(providers).map((provider)=>{
+                    <button 
+                      type='button' 
+                      className='black_btn'
+                      key={provider.name}
+                      onClick={()=>{signIn(provider.id)}}>
+                        Sign In
+                    </button>
+                  })
+                }
+              </>
+          /*
+            <button type='button' className='outline_btn' onClick={signIn}>
               Sign in
-            </button>)}
+            </button>
+            
+            */)}
         </div>
 
         {/* Navigation mobile */}
@@ -125,13 +140,13 @@ const Nav = () => {
               className='rounded-full'/>
             </div>
           ) : (
+            
             <button type='button' className='outline_btn' onClick={signIn}>
               Sign in
             </button>
+            
           )}
         </div>
-
-
     </nav>
   )
 }
