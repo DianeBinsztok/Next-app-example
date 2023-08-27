@@ -1,5 +1,6 @@
 import '@styles/globals.css';
 import Nav from '@components/Nav';
+import Provider from '@components/Provider';
 
 export const metadata = {
   title: 'NextJS example',
@@ -8,8 +9,10 @@ export const metadata = {
  
 export default function RootLayout({ children }) {
  return (
+  /* Tout le contenu du body sera encapsulé dans le Provider */
     <html lang="en">
       <body>
+        <Provider>
         <div className='main'>
           <div className='gradient'/>
         </div>
@@ -18,6 +21,7 @@ export default function RootLayout({ children }) {
         <Nav/>
               { children }
         </main>
+        </Provider>
       </body>
     </html>
   )
